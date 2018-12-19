@@ -12,13 +12,13 @@ Create an Android app that:\
       -GPS location of device\
       -Orientation of device\
       -Additional descriptive tags in the Image Description tag\
-\
+
 
 Create a basic server:\
 -hosted on a Pi\
 -written in Python\
 -analyses tags and puts images with similar tags in the same data set(s)\
-\
+
 
 ## Progress
 Camera functionalities completed along with EXIF tags.\
