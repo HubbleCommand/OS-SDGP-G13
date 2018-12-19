@@ -14,17 +14,8 @@ Create an Android app that:\
       -Additional descriptive tags in the Image Description tag
 
 
-Create a basic server:\
--hosted on a Pi\
--written in Python\
--analyses tags and puts images with similar tags in the same data set(s)
-
-
 ## Progress
 Camera functionalities completed along with EXIF tags.
 
 Remaining objectives for App:\
--sending images to a server, to be uploaded daily to Zooniverse
-
-Remaining objectives for Server:\
--all functionalities remain to be added
+-add more to legal section, divide into different activities
