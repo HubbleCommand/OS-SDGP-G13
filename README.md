@@ -11,17 +11,17 @@ Create an Android app that:\
     -Tags images through EXIF interface\
       -GPS location of device\
       -Orientation of device\
-      -Additional descriptive tags in the Image Description tag\
+      -Additional descriptive tags in the Image Description tag
 
 
 Create a basic server:\
 -hosted on a Pi\
 -written in Python\
--analyses tags and puts images with similar tags in the same data set(s)\
+-analyses tags and puts images with similar tags in the same data set(s)
 
 
 ## Progress
-Camera functionalities completed along with EXIF tags.\
+Camera functionalities completed along with EXIF tags.
 
 Remaining objectives for App:\
 -sending images to a server, to be uploaded daily to Zooniverse
