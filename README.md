@@ -4,7 +4,7 @@ This contains the written source code of the Android Studio Project.\
 IT DOES NOT INCLUDE THE ENTIRE ANDROID STUDIO PROJET!
 
 ## Objectives
-Create an app that:\
+Create an Android app that:\
   -Has a Legal section\
   -Has a Camera section\
     -Allows pictures to be saved\
@@ -13,15 +13,18 @@ Create an app that:\
       -Orientation of device\
       -Additional descriptive tags in the Image Description tag\
 \
-Remaining objectives:\
--sending images to a server, to be uploaded daily to Zooniverse
 
-Create a server:\
+Create a basic server:\
 -hosted on a Pi\
 -written in Python\
 -analyses tags and puts images with similar tags in the same data set(s)\
 \
-While a server exists, all functionalities remain to be added.
 
 ## Progress
-Camera functionalities completed along with EXIF tags
+Camera functionalities completed along with EXIF tags.\
+
+Remaining objectives for App:\
+-sending images to a server, to be uploaded daily to Zooniverse
+
+Remaining objectives for Server:\
+-all functionalities remain to be added
