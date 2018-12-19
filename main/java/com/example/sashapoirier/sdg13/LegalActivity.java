@@ -14,13 +14,6 @@ public class LegalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_legal);
-
-        //imView1 = findViewById(R.id.imageView);
-        //imView1.setImageDrawable(ic);
-
-        imViewlast = findViewById(R.id.imageView7);
-
-        tvLaw3 = findViewById(R.id.textView3);
-        tvLaw3.setText("Law 3: W");
+        tvLaw1 = findViewById(R.id.textView4);
     }
 }

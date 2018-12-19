@@ -57,6 +57,16 @@ public class CameraActivity extends AppCompatActivity {
                 {
                     ActivityCompat.requestPermissions(CameraActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERM_WRITE_STORAGE);
                 }
+                /*
+                if (ActivityCompat.checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                {
+                    ActivityCompat.requestPermissions(CameraActivity.this, new String  [] {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_GPS_LOCATION);
+                }*/
+                //checks permissions and asks for them
+                //checks if permissions have been granted
+                //if permissions have been granted, take photo thingy
+                //else return to main menu, toast message saying that the required functionalities are not permitted for use by user's choice
                 else
                 {
                     takePhoto();
