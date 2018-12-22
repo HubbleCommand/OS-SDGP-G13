@@ -27,28 +27,43 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/v"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_horizontal"
-                android:text="Quelle est la procédure pour couper un arbre?"
-                android:textSize="32dp"
-                android:textStyle="bold" />
+                android:text="Comment est-ce que la ville décide de découper un arbre?"
+                android:textSize="20sp" />
 
-            <ImageView
-                android:id="@+id/imageView4"
+            <Button
+                android:id="@+id/btn_legal_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:srcCompat="@tools:sample/avatars" />
+                android:text="Abattage d'arbres" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:text="\nEn Suisse, toute abattage/élagage d'arbres a besoin d'une autorisation \n\nIl y a deux types de demandes;\n  -celles liés à un projet de construction \n  -celles pas liés à du construction \n\nDes demandes non liées à des projets de constructions sont surtout pour des arbres dangereux ou malade.\n\nPour faire un demande d'abattage, il y a un frais entre 150CHF et 1000CHF \n\nSi la requête est acceptée, c’est contre une valeur de remplacement\n\nSi la requête est refusé, on n'est pas remboursé\n"
-                />
+                android:text="\nComment est-ce que la ville protège les arbres et la nature?"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btn_protection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Protection Nature" />
+
+            <TextView
+                android:id="@+id/tv2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\nComment est-ce que la ville entretien les arbres et les milieux naturels?"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btn_entretien"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Entretien Nature" />
 
         </LinearLayout>
     </ScrollView>

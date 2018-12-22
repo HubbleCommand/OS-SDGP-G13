@@ -1,76 +1,84 @@
 package com.example.sashapoirier.sdg13;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Camera;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.location.Location;
 import android.media.ExifInterface;
-import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
-
+import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Random;
 
-public class CameraActivity extends AppCompatActivity {
+import static java.lang.StrictMath.abs;
+
+public class CameraActivity extends AppCompatActivity implements SensorEventListener
+{
     Button btnTakePhoto;
     Spinner spinnerType, spinnerReason;
-    public static final int REQUEST_PERM_WRITE_STORAGE = 102;
-    public static final int REQUEST_GPS_LOCATION = 1030;
     private final int CAPTURE_PHOTO = 104;
+    double Dlatitude, Dlongitude, Daltitude;
 
     Bitmap resizeImage;
     ImageView imageViewExample;
+
+    TextView textSensor21;
+    TextView textSensor22;
+    TextView textSensor23;
+    SensorManager SM;
+    Sensor orientationSensor;
+    ProgressBar progressBar21;
+    ProgressBar progressBar22;
+    ProgressBar progressBar23;
+    Button button;
+
+    int value1; // pour la convertion des valeurs pour nos progressBar
+    int value2;
+    int value3;
+    double x_val = 0;
+    double y_val = 0;
+    double z_val = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-        initializeUI();
 
+        SM = (SensorManager) getSystemService(SENSOR_SERVICE); // on crée notre sensor manager
+        orientationSensor = SM.getDefaultSensor( Sensor.TYPE_ORIENTATION ); // on désigne le type de sensor en créen le contenaire du sensor
+        SM.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_NORMAL); //on définit un délait d'enregistrement
+
+        // pour chaque view on attribue l'identifiant qui fait le lien avec le manifeste
+        /*
+        textSensor21 = (TextView) findViewById(R.id.textView_sensor21); // on définit le contenaire du layout pour lequel on attribut notre text du sensor
+        textSensor22 = (TextView) findViewById(R.id.textView_sensor22); // on définit le contenaire du layout pour lequel on attribut notre text du sensor
+        textSensor23 = (TextView) findViewById(R.id.textView_sensor23); // on définit le contenaire du layout pour lequel on attribut notre text du sensor
+        progressBar21 = (ProgressBar) findViewById(R.id.progressBar_sensor21); // on définit le contenaire du layout pour lequel on attribut notre valeur
+        progressBar22 = (ProgressBar) findViewById(R.id.progressBar_sensor22); // on définit le contenaire du layout pour lequel on attribut notre valeur
+        progressBar23 = (ProgressBar) findViewById(R.id.progressBar_sensor23); // on définit le contenaire du layout pour lequel on attribut notre valeur
+        button = (Button) findViewById(R.id.button_returnSensor2);
+        */
+        initializeUI();
         btnTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Set permission To access gallery and Camera
-                boolean preconditions = false;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                {
-                    if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
-                    {
-                        ActivityCompat.requestPermissions(CameraActivity.this, new String[]{Manifest.permission.CAMERA}, 1);
-                    }
-                }
-                if(ActivityCompat.checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                {
-                    ActivityCompat.requestPermissions(CameraActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERM_WRITE_STORAGE);
-                }
-                /*
-                if (ActivityCompat.checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-                {
-                    ActivityCompat.requestPermissions(CameraActivity.this, new String  [] {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_GPS_LOCATION);
-                }*/
-                //checks permissions and asks for them
-                //checks if permissions have been granted
-                //if permissions have been granted, take photo thingy
-                //else return to main menu, toast message saying that the required functionalities are not permitted for use by user's choice
-                else
-                {
-                    takePhoto();
-                }
+                takePhoto();
             }
         });
     }
@@ -91,6 +99,14 @@ public class CameraActivity extends AppCompatActivity {
 
     public void takePhoto()
     {
+        Log.d("error2", "1");
+        GPSImplementation gps = new GPSImplementation(getApplicationContext());
+        Location location = gps.getLocation();
+        Dlatitude = location.getLatitude();
+        Dlongitude = location.getLongitude();
+        Daltitude = location.getAltitude();
+        Log.d("error2", "Latitude: "+Double.toString(Dlatitude));
+        Log.d("error2", "1");
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(cameraIntent, CAPTURE_PHOTO);
     }
@@ -134,22 +150,36 @@ public class CameraActivity extends AppCompatActivity {
             String resizeCoolerImagePath = file.getAbsolutePath();
             out.flush();
             out.close();
-
             String selections = spinnerType.getSelectedItem().toString() + "," + spinnerReason.getSelectedItem().toString();
+
 
             ExifInterface exif = new ExifInterface(file.toString());
             Log.d("error2", exif.toString());
-            exif.setAttribute(ExifInterface.TAG_IMAGE_DESCRIPTION, selections);
 
-            String altitude= "", latitude= "", longitude = "", orientation = "139";
-            exif.setAttribute(ExifInterface.TAG_GPS_ALTITUDE, altitude);
-            exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, latitude);
-            exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, longitude);
-            exif.setAttribute(ExifInterface.TAG_ORIENTATION, orientation);
+            //gets all GPS data
+            String altitude= Double.toString(Daltitude);
+            String latitude= Double.toString(Dlatitude);
+            String longitude = Double.toString(Dlongitude);
+
+            //Creates JSON object, puts all metadata into it
+            JSONObject metadata = new JSONObject();
+            metadata.put("Orientation", ""+x_val+","+y_val+","+z_val);
+            metadata.put("Latitude", latitude);
+            metadata.put("Longitude", longitude);
+            metadata.put("Altitude", altitude);
+            metadata.put("Descriptors", selections);
+            Log.d("error2", "Metadata JSON: "+metadata.toString());
+
+            //Setting EXIF values
+            exif.setAttribute(ExifInterface.TAG_IMAGE_DESCRIPTION, metadata.toString());
             exif.saveAttributes();
-            String orientationS = exif.getAttribute(ExifInterface.TAG_ORIENTATION);
-            Log.d("error2", orientationS);
+            //Checking EXIF tag
+            String tags = exif.getAttribute(ExifInterface.TAG_IMAGE_DESCRIPTION);
+            Log.d("error2", "Exif tags:"+tags);
+            JSONObject tag_result = new JSONObject(tags);
+            Log.d("error2", "Exif tags as JSON: "+ tag_result.toString());
 
+            //prints success to user
             Toast.makeText(CameraActivity.this, "Photo saved ", Toast.LENGTH_SHORT).show();
         }
         catch (Exception e)
@@ -158,5 +188,44 @@ public class CameraActivity extends AppCompatActivity {
             Toast.makeText(CameraActivity.this, "Exception Throw ", Toast.LENGTH_SHORT).show();
         }
     }
-}
 
+    @Override
+    protected void  onPause(){
+        SM.unregisterListener(this, orientationSensor);//pour ne pas gaspiller des ressources on désactive l'enregistrement des valeurs
+        super.onPause();
+    }
+
+    @Override
+    protected void  onResume(){
+        SM.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_NORMAL); //on définit un délait d'enregistrement
+        super.onResume();
+    }
+
+    @Override // pour le bon fonctionnement de l'activité il est necessaire pour l'appel de classe de crée la méthode, même si on l'utilise pas.
+    public void onAccuracyChanged(Sensor sensor, int accuracy)
+    {
+
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event)
+    {
+        /*
+        textSensor21.setText("X :"+event.values[0]) ; //ICI on concatène la valeur stocker dans le tab sensor avec le text du textView
+        textSensor22.setText("Y :"+event.values[1]) ; //ICI on concatène la valeur stocker dans le tab sensor avec le text du textView
+        textSensor23.setText("Z :"+event.values[2]) ; //ICI on concatène la valeur stocker dans le tab sensor avec le text du textView
+        progressBar21.setProgress((int) abs(event.values[0]*10));// on donne la valeur à la progressbar  pour qu'elle l'évalue.
+        progressBar22.setProgress((int) abs(event.values[1]*10));
+        progressBar23.setProgress((int) abs(event.values[2]*10));*/
+
+        x_val = event.values[0];
+        y_val = event.values[1];
+        z_val = event.values[2];
+    }
+    public void onClick(View view)
+    {
+        SM.unregisterListener(this, orientationSensor);//pour ne pas gaspiller des ressources on désactive l'enregistrement des valeurs
+        //on ferme l'activité quand on clic
+        finish();
+    }
+}
